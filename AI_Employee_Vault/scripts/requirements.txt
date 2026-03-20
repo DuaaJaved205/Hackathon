@@ -1,0 +1,22 @@
+# AI Employee Watcher Scripts - Dependencies
+
+# Core dependencies (required for all)
+watchdog>=3.0.0
+
+# Gmail Watcher
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.1.0
+google-auth-oauthlib>=1.0.0
+
+# LinkedIn Watcher and Poster
+playwright>=1.40.0
+
+# After installing, run:
+#   playwright install chromium
+
+# Optional: Scheduler (for advanced scheduling)
+# apscheduler>=3.10.0
+
+# Installation:
+#   pip install -r requirements.txt
+#   playwright install chromium

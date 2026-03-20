@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# OAuth Tokens and Credentials (IMPORTANT - Never commit these!)
+scripts/token.json
+credentials.json
+*.p12
+*.pem
+
+# Cache files
+.cache/
+*.cache
+
+# Logs
+Logs/*.log
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Session files
+*.session
+*.session-journal
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Approval and processed files (keep these local)
+Approved/*.md
+Rejected/*.md
+Done/*.md
+Needs_Action/*.md
+Plans/*.md
+Pending_Approval/*.md
+
+# Dashboard updates (keep local)
+Dashboard.md
+
+# Local configuration
+.env
+*.local

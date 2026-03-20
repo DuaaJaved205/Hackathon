@@ -1,0 +1,30 @@
+[
+  {
+    "timestamp": "2026-03-20T20:48:02.221780",
+    "file": "EMAIL_REPLY_20260320_191624_Greetings.md",
+    "action": "sent",
+    "to": "duaajavedwork25@gmail.com",
+    "subject": "Re: Greetings"
+  },
+  {
+    "timestamp": "2026-03-20T20:48:02.757819",
+    "file": "EMAIL_REPLY_20260320_194031_Well.md",
+    "action": "sent",
+    "to": "duaajavedwork25@gmail.com",
+    "subject": "Re: Well"
+  },
+  {
+    "timestamp": "2026-03-20T21:30:59.398943",
+    "file": "EMAIL_REPLY_20260320_211933_Eid.md",
+    "action": "sent",
+    "to": "duaajaved205@gmail.com",
+    "subject": "Re: Eid"
+  },
+  {
+    "timestamp": "2026-03-20T21:44:31.689807",
+    "file": "EMAIL_REPLY_20260320_214150_Eid.md",
+    "action": "sent",
+    "to": "duaajaved205@gmail.com",
+    "subject": "Re: Eid"
+  }
+]

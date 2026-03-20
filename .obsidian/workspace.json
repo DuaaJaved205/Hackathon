@@ -1,0 +1,214 @@
+{
+  "main": {
+    "id": "b170dc3bc191b7fa",
+    "type": "split",
+    "children": [
+      {
+        "id": "6a08cb98ead3ddad",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f7da48b895ee37e9",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "01447c8321ebb325",
+    "type": "split",
+    "children": [
+      {
+        "id": "de528f31abc6131e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e4715cb35039db9d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "91cd0c7e72c870d6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "0607199a0c12e2fd",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "3697f21f224db36c",
+    "type": "split",
+    "children": [
+      {
+        "id": "f3550d005867e9cf",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4c09977fe4053611",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "AI_Employee_Vault/Needs_Action/FILE_20260318_064257_test-file.md.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for FILE_20260318_064257_test-file.md"
+            }
+          },
+          {
+            "id": "294292747a3e17c1",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "AI_Employee_Vault/Needs_Action/FILE_20260318_064257_test-file.md.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from FILE_20260318_064257_test-file.md"
+            }
+          },
+          {
+            "id": "2c712b7e818ca116",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "0e735e0ca84b9fdd",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "e68f24b0e9a92b7f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "AI_Employee_Vault/Needs_Action/FILE_20260318_064257_test-file.md.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of FILE_20260318_064257_test-file.md"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "e4715cb35039db9d",
+  "lastOpenFiles": [
+    "AI_Employee_Vault/Done/EMAIL_REPLY_20260320_194031_Well.md",
+    "AI_Employee_Vault/Done/EMAIL_REPLY_20260320_191624_Greetings.md",
+    "AI_Employee_Vault/Logs/gmail_2026-03-20.json",
+    "AI_Employee_Vault/Logs/qwen_20260320_204439.log",
+    "workflow.md",
+    "AI_Employee_Vault/Approved/EMAIL_REPLY_20260320_194031_Well.md",
+    "AI_Employee_Vault/Approved/EMAIL_REPLY_20260320_191624_Greetings.md",
+    "AI_Employee_Vault/Logs/qwen_20260320_202915.log",
+    "AI_Employee_Vault/Pending_Approval/EMAIL_REPLY_20260320_194031_Well.md",
+    "AI_Employee_Vault/Plans/Plan_EMAIL_20260320_194031.md",
+    "AI_Employee_Vault/Pending_Approval/EMAIL_REPLY_20260320_191624_Greetings.md",
+    "AI_Employee_Vault/Plans/Plan_EMAIL_20260320_191624.md",
+    "AI_Employee_Vault/orchestrator_output.txt",
+    "AI_Employee_Vault/Company_Handbook.md",
+    "AI_Employee_Vault/Needs_Action/FILE_20260318_064257_test-file.md.md",
+    "AI_Employee_Vault/Inbox/Drop/test-file.md",
+    "AI_Employee_Vault/Inbox/Drop",
+    "test-file.md",
+    "AI_Employee_Vault/Inbox/test-file.md",
+    "AI_Employee_Vault/scripts/test-file.md",
+    "AI_Employee_Vault/scripts/__pycache__/base_watcher.cpython-314.pyc",
+    "AI_Employee_Vault/scripts/__pycache__",
+    "AI_Employee_Vault/AI-Employee-Work.md",
+    "AI_Employee_Vault/README.md",
+    "AI_Employee_Vault/scripts/orchestrator.py",
+    "AI_Employee_Vault/scripts/filesystem_watcher.py",
+    "AI_Employee_Vault/scripts/requirements.txt",
+    "AI_Employee_Vault/Business_Goals.md",
+    "AI_Employee_Vault/Dashboard.md"
+  ]
+}
