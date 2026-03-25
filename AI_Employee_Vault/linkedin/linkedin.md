@@ -1,80 +1,240 @@
-# 📘 LinkedIn Automation Guide
+# LinkedIn Automation - Complete Guide
 
-> **Complete guide to LinkedIn posting automation with AI Employee Silver Tier**
+**AI Employee Silver Tier - LinkedIn Integration**
 
 ---
 
 ## 🎯 Overview
 
-This guide explains how LinkedIn automation works in the AI Employee project, what's fully automated, and what requires manual intervention.
+Complete LinkedIn automation for the AI Employee system, including:
+- **LinkedIn Watcher** - Monitor notifications and messages
+- **LinkedIn Poster** - Auto-post content with approval workflow
+- **Session Management** - Persistent login for automation
 
 ---
 
 ## 📋 What's Automated vs Manual
 
-### ✅ Fully Automated (No Manual Work)
+### ✅ Fully Automated
 
 | Task | How It Works |
 |------|--------------|
 | **LinkedIn Login** | Session saved after first login, auto-reused |
 | **Browser Launch** | Opens automatically via Playwright |
-| **Navigation** | Goes to LinkedIn feed automatically |
-| **Click "Start a Post"** | Automated via selectors |
-| **Type Content** | Fills post text automatically |
-| **Add Hashtags** | Appends hashtags automatically |
-| **Click "Post" Button** | Submits post automatically |
+| **Navigation** | Goes to LinkedIn feed/notifications/messages |
+| **Monitoring** | Checks every 5 minutes for new activity |
+| **Keyword Filtering** | Filters by priority (high/medium/low) |
+| **Action File Creation** | Creates .md files in Needs_Action/ |
+| **Post Publishing** | Posts content automatically (after approval) |
 | **Logging** | Saves action logs automatically |
 
 ### ⚠️ Requires Manual Setup (One-Time)
 
 | Task | How To Do It | Frequency |
 |------|--------------|-----------|
-| **Initial LinkedIn Login** | Run `linkedin_login.py` and login in browser | Once only |
+| **Initial LinkedIn Login** | Run `linkedin_login.py` and login | Once only |
 | **Install Dependencies** | `pip install playwright` + `playwright install chromium` | Once only |
 
-### 🔒 Optional: Approval Workflow (HITL)
+### 🔒 Human-in-the-Loop (HITL)
 
 | Mode | Description | When to Use |
 |------|-------------|-------------|
-| **Auto-Post Mode** | Posts immediately without approval | Quick posts, testing |
 | **Approval Mode** | Creates approval file, waits for human review | Business posts, important announcements |
+| **Auto-Post Mode** | Posts immediately without approval | Quick posts, testing |
+
+---
+
+## 🗂️ File Structure
+
+```
+AI_Employee_Vault/
+├── scripts/
+│   ├── linkedin_watcher.py      # Monitor notifications/messages
+│   ├── linkedin_poster.py       # Post to LinkedIn
+│   └── linkedin_login.py        # First-time login helper
+├── .cache/
+│   └── linkedin_session/        # Saved login session
+│       └── storage.json
+├── Needs_Action/
+│   └── LINKEDIN_*.md           # Action files from watcher
+├── Pending_Approval/
+│   └── LINKEDIN_POST_*.md      # Posts awaiting approval
+├── Approved/
+│   └── LINKEDIN_POST_*.md      # Approved posts ready to publish
+├── Done/
+│   └── LINKEDIN_POST_*.md      # Published posts
+└── Logs/
+    └── linkedin_YYYY-MM-DD.json # Activity logs
+```
 
 ---
 
 ## 🚀 Quick Start
 
-### First-Time Setup (One-Time Only)
+### Step 1: Install Dependencies
 
 ```bash
-# 1. Navigate to vault
-cd C:\Users\Haya Javed\Downloads\Hackathon0\AI_Employee_Vault
-
-# 2. Run login helper (opens visible browser)
-python scripts/linkedin_login.py .
-
-# 3. Login to LinkedIn in the browser window
-# 4. Wait for feed to load
-# 5. Browser closes automatically, session saved
+pip install playwright
+playwright install chromium
 ```
 
-**✅ Done!** You never need to do this again unless you logout or session expires.
+### Step 2: First-Time Login (One-Time Setup)
+
+```bash
+cd AI_Employee_Vault
+python scripts/linkedin_login.py .
+```
+
+**What happens:**
+1. Browser opens (visible)
+2. Navigate to LinkedIn login
+3. **You login manually**
+4. Session saved to `.cache/linkedin_session/`
+5. Browser closes
+
+**✅ Done!** Never need to login again (unless session expires).
+
+### Step 3: Start LinkedIn Watcher
+
+```bash
+# Monitor LinkedIn every 5 minutes (300 seconds)
+python scripts/linkedin_watcher.py . 300
+```
+
+**Or start all watchers:**
+```bash
+python scripts/orchestrator.py . all
+```
 
 ---
 
-## 📝 How to Post to LinkedIn
+## 🔍 LinkedIn Watcher - How It Works
 
-### Method 1: Auto-Post (Instant, No Approval)
+### Complete Flow
+
+```
+1. Opens Chromium browser (headless)
+        ↓
+2. Navigates to LinkedIn.com
+        ↓
+3. Loads saved session (auto-login)
+        ↓
+4. Checks Notifications page
+        ↓
+5. Checks Messages page
+        ↓
+6. Filters by keywords (hiring, opportunity, message, etc.)
+        ↓
+7. Creates .md action file for each relevant item
+        ↓
+8. Saves to Needs_Action/ folder
+        ↓
+9. Waits 5 minutes → Repeats from step 4
+```
+
+### Code Flow
+
+```python
+# Initialize watcher
+watcher = LinkedInWatcher(
+    vault_path=".",
+    check_interval=300  # 5 minutes
+)
+
+# Launch browser
+with sync_playwright() as p:
+    browser = p.chromium.launch_persistent_context(
+        user_data_dir="./.cache/linkedin_session",  # Saves session
+        headless=True,  # Background operation
+        args=['--disable-blink-features=AutomationControlled']  # Avoid detection
+    )
+    
+    page = browser.pages[0]
+    page.goto('https://www.linkedin.com/feed/')
+    
+    # Check notifications and messages
+    notifications = check_notifications(page)
+    messages = check_messages(page)
+    
+    # Filter by keywords and create action files
+    for item in notifications + messages:
+        if item['priority'] != 'low':
+            create_action_file(item)
+```
+
+### Keyword Filtering
+
+```python
+keywords = {
+    'high': ['hiring', 'opportunity', 'interview', 'job', 'position', 'contract'],
+    'medium': ['connection', 'message', 'comment', 'post', 'share'],
+    'low': ['like', 'view', 'follower']
+}
+```
+
+**Priority Examples:**
+
+| Text | Priority | Why |
+|------|----------|-----|
+| "Hiring: Senior Developer" | 🔴 High | Contains "hiring" |
+| "New job opportunity at Google" | 🔴 High | Contains "opportunity", "job" |
+| "Jane wants to connect" | 🟡 Medium | Contains "connection" |
+| "John commented on your post" | 🟡 Medium | Contains "comment", "post" |
+| "Someone liked your post" | ⚪ Low | Only "like" - ignored |
+
+### Action File Format
+
+**Example: `LINKEDIN_MESSAGE_20260320_120000.md`**
+
+```markdown
+---
+type: linkedin_message
+source: LinkedIn
+received: 2026-03-20T12:00:00
+priority: high
+status: pending
+---
+
+# LinkedIn Message
+
+**Received:** 2026-03-20 12:00:00
+**Priority:** HIGH
+
+---
+
+## Content
+
+John Doe: "Hi! I saw your profile and I'm interested in discussing a job opportunity at our company. Are you available for a call this week?"
+
+---
+
+## Suggested Actions
+
+- [ ] Reply to message
+- [ ] Schedule follow-up
+- [ ] Save contact information
+
+## Notes
+
+_Add your notes here_
+```
+
+---
+
+## 📝 LinkedIn Poster - How It Works
+
+### Posting Methods
+
+#### Method 1: Auto-Post (Instant, No Approval)
 
 ```bash
-cd C:\Users\Haya Javed\Downloads\Hackathon0\AI_Employee_Vault
-
 # Post custom text
 python scripts/linkedin_poster.py . --auto-post --post "Your post content here"
 
 # Post with hashtags
-python scripts/linkedin_poster.py . --auto-post --post "Your content" --hashtags "#AI #Tech #Automation"
+python scripts/linkedin_poster.py . --auto-post --post "Your content" --hashtags "#AI #Tech"
 
-# Generate post from topic (AI generates content)
+# AI-generated content from topic
 python scripts/linkedin_poster.py . --auto-post --topic "AI Employee Launch" --tone enthusiastic
 
 # Generate + hashtags
@@ -85,7 +245,7 @@ python scripts/linkedin_poster.py . --auto-post --topic "Business Update" --tone
 1. Browser opens (visible)
 2. Logs into LinkedIn automatically
 3. Clicks "Start a post"
-4. Types your content
+4. Types content
 5. Clicks "Post"
 6. ✅ **Post published!**
 
@@ -93,22 +253,26 @@ python scripts/linkedin_poster.py . --auto-post --topic "Business Update" --tone
 
 ---
 
-### Method 2: Approval Workflow (HITL - Recommended for Business)
+#### Method 2: Approval Workflow (HITL - Recommended)
+
+**Step 1: Create Approval Request**
 
 ```bash
-# Step 1: Create post (creates approval request)
+# Create post (creates approval file)
 python scripts/linkedin_poster.py . --post "Your business post content"
-
-# Output:
-# ✅ Approval request created: Pending_Approval/LINKEDIN_POST_20260319_....md
-# Move to Approved/ to publish
 ```
 
-**Step 2: Review & Approve**
+**Output:**
+```
+✅ Approval request created: Pending_Approval/LINKEDIN_POST_20260320_120000.md
+Move to Approved/ to publish
+```
+
+**Step 2: Review & Approve (Manual)**
 
 1. Open Obsidian
 2. Go to `Pending_Approval/` folder
-3. Open the file: `LINKEDIN_POST_*.md`
+3. Open: `LINKEDIN_POST_*.md`
 4. Review content
 5. **Move file to `Approved/` folder**
 
@@ -126,9 +290,9 @@ Post submitted!
 
 ---
 
-## 🎨 Post Tone Options
+### Post Tone Options
 
-When using `--topic`, you can specify the tone:
+When using `--topic`, specify the tone:
 
 | Tone | Use Case | Example |
 |------|----------|---------|
@@ -141,22 +305,78 @@ When using `--topic`, you can specify the tone:
 python scripts/linkedin_poster.py . --auto-post --topic "Product Launch" --tone enthusiastic
 ```
 
+**Generated Post:**
+```
+🎉 BIG NEWS! 🎉
+
+We're absolutely thrilled to announce Product Launch!
+
+This is a game-changer and we couldn't be more excited to share this with you all!
+
+Stay tuned for more updates! 🚀
+
+#Innovation #Tech #ProductLaunch
+```
+
 ---
 
-## 📁 File Structure
+## 🔄 Complete Workflow Examples
+
+### Example 1: Monitor LinkedIn + Reply to Message
 
 ```
-AI_Employee_Vault/
-├── scripts/
-│   ├── linkedin_poster.py      # Main posting script
-│   ├── linkedin_watcher.py     # Monitor LinkedIn notifications
-│   └── linkedin_login.py       # First-time login helper
-├── .cache/
-│   └── linkedin_session/       # Saved login session (DO NOT DELETE)
-├── Pending_Approval/           # Posts waiting for approval
-├── Approved/                   # Approved posts ready to publish
-└── Logs/
-    └── linkedin_YYYY-MM-DD.json # Post activity logs
+1. LinkedIn Watcher detects message
+   → "Hi! Interested in job opportunity..."
+        ↓
+2. Creates action file
+   → Needs_Action/LINKEDIN_MESSAGE_*.md
+        ↓
+3. Qwen processes file
+   → Checks Company_Handbook.md
+        ↓
+4. Creates Plan.md
+   → Plans/LINKEDIN_MESSAGE_Plan.md
+        ↓
+5. Creates approval request
+   → Pending_Approval/LINKEDIN_REPLY_*.md
+        ↓
+6. Human approves (move to Approved/)
+        ↓
+7. LinkedIn Poster sends reply
+   → Post published
+        ↓
+8. Moves to Done/
+```
+
+---
+
+### Example 2: Business Announcement Post
+
+```bash
+# Create approval request
+python scripts/linkedin_poster.py . --post "Excited to announce our new AI Employee Silver Tier!
+
+Key features:
+✅ Gmail integration
+✅ LinkedIn automation
+✅ Multi-platform support
+
+#AI #Automation #Business"
+
+# In Obsidian:
+# 1. Review file in Pending_Approval/
+# 2. Move to Approved/
+# 3. Run:
+python scripts/linkedin_poster.py . --process-approved
+```
+
+---
+
+### Example 3: AI-Generated Content
+
+```bash
+# Let AI generate post about "Product Launch"
+python scripts/linkedin_poster.py . --auto-post --topic "Product Launch" --tone enthusiastic --hashtags "#Innovation #Tech"
 ```
 
 ---
@@ -191,8 +411,11 @@ python scripts/linkedin_poster.py . --help
 # Start LinkedIn watcher (monitors notifications)
 python scripts/linkedin_watcher.py . 300
 
-# Watcher checks every 300 seconds (5 minutes)
-# Creates action files in Needs_Action/ folder
+# Check every 2 minutes (120 seconds)
+python scripts/linkedin_watcher.py . 120
+
+# Check every 10 minutes (600 seconds)
+python scripts/linkedin_watcher.py . 600
 ```
 
 ### Login Commands
@@ -207,64 +430,31 @@ rmdir /s /q .cache\linkedin_session
 
 ---
 
-## 🔄 Complete Workflow Examples
-
-### Example 1: Quick Test Post
-
-```bash
-cd C:\Users\Haya Javed\Downloads\Hackathon0\AI_Employee_Vault
-python scripts/linkedin_poster.py . --auto-post --post "Testing LinkedIn automation! 🚀"
-```
-
-**Result:** Post published in ~60 seconds
-
----
-
-### Example 2: Business Announcement
-
-```bash
-# Create approval request
-python scripts/linkedin_poster.py . --post "Excited to announce our new AI Employee Silver Tier! 
-
-Key features:
-✅ Gmail integration
-✅ LinkedIn automation
-✅ Multi-platform support
-
-#AI #Automation #Business"
-
-# Then in Obsidian:
-# 1. Review file in Pending_Approval/
-# 2. Move to Approved/
-# 3. Run:
-python scripts/linkedin_poster.py . --process-approved
-```
-
----
-
-### Example 3: AI-Generated Content
-
-```bash
-# Let AI generate enthusiastic post about "Product Launch"
-python scripts/linkedin_poster.py . --auto-post --topic "Product Launch" --tone enthusiastic --hashtags "#Innovation #Tech"
-```
-
-**Generated Post:**
-```
-🎉 BIG NEWS! 🎉
-
-We're absolutely thrilled to announce Product Launch!
-
-This is a game-changer and we couldn't be more excited to share this with you all!
-
-Stay tuned for more updates! 🚀
-
-#Innovation #Tech #ProductLaunch
-```
-
----
-
 ## ⚙️ Configuration Options
+
+### Change Check Interval
+
+```bash
+# Check every 2 minutes (120 seconds)
+python scripts/linkedin_watcher.py . 120
+
+# Check every 10 minutes (600 seconds)
+python scripts/linkedin_watcher.py . 600
+```
+
+**Recommended:** 300 seconds (5 minutes) - avoids rate limiting
+
+### Customize Keywords
+
+Edit `linkedin_watcher.py`:
+
+```python
+self.keywords = {
+    'high': ['your', 'custom', 'keywords'],
+    'medium': ['more', 'keywords'],
+    'low': ['ignore', 'these']
+}
+```
 
 ### Change Browser Behavior
 
@@ -416,15 +606,15 @@ python scripts/linkedin_login.py .
 
 ```bash
 # View today's logs
-type Logs\linkedin_2026-03-19.json
+type Logs\linkedin_2026-03-20.json
 ```
 
 ### Log Format
 
 ```json
 {
-  "timestamp": "2026-03-19T07:02:18",
-  "file": "LINKEDIN_POST_20260319_070218.md",
+  "timestamp": "2026-03-20T12:00:00",
+  "file": "LINKEDIN_POST_20260320_120000.md",
   "action": "posted",
   "content_preview": "Testing AI Employee Silver Tier..."
 }
@@ -453,17 +643,6 @@ qwen "Create a LinkedIn post about our Silver Tier launch and post it"
 LinkedIn Watcher → Detects notification → Creates action file →
 Qwen processes → Creates response → LinkedIn Poster posts reply
 ```
-
----
-
-## 📞 Support
-
-| Issue | Solution |
-|-------|----------|
-| Login fails | Check credentials, clear session, re-login |
-| Post not publishing | Check browser visible, review error logs |
-| Selectors not working | LinkedIn UI may have changed, update selectors |
-| Session keeps expiring | Check if being logged out elsewhere |
 
 ---
 
@@ -515,11 +694,24 @@ Qwen processes → Creates response → LinkedIn Poster posts reply
 │  2. Move file from Pending_Approval/ to Approved/           │
 │  3. python scripts/linkedin_poster.py . --process-approved  │
 │                                                             │
+│  MONITORING:                                                │
+│  python scripts/linkedin_watcher.py . 300                   │
+│                                                             │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-*Generated: 2026-03-19*  
-*AI Employee v0.2 (Silver Tier)*  
-*LinkedIn Automation Guide v1.0*
+## 📞 Support
+
+| Issue | Solution |
+|-------|----------|
+| Login fails | Check credentials, clear session, re-login |
+| Post not publishing | Check browser visible, review error logs |
+| Selectors not working | LinkedIn UI may have changed, update selectors |
+| Session keeps expiring | Check if being logged out elsewhere |
+
+---
+
+*Generated: 2026-03-21*
+*AI Employee v0.9 (Silver Tier - LinkedIn Integration)*
