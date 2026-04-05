@@ -18,8 +18,9 @@ credentials.json
 .cache/
 *.cache
 
-# Logs
+# Logs (May contain personal data)
 Logs/*.log
+Logs/*.json
 *.log
 
 # OS files
